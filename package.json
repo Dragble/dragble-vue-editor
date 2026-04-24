@@ -2,14 +2,14 @@
   "name": "dragble-vue-editor",
   "version": "1.0.0",
   "description": "Vue 3 email editor component AI powered drag-and-drop email builder for creating responsive email templates and newsletters. Build HTML emails visually with Dragble.",
-  "type": "module",
   "main": "dist/index.js",
-  "module": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "files": [

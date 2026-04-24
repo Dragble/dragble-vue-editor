@@ -16,11 +16,24 @@ const plugins = [
 
 const external = ['vue', '@dragble/editor-sdk', 'dragble-editor-types'];
 
+// CJS bundle
+const cjsBundle = {
+  input: 'src/index.ts',
+  output: {
+    file: 'dist/index.js',
+    format: 'cjs',
+    sourcemap: true,
+    exports: 'named',
+  },
+  plugins,
+  external,
+};
+
 // ESM bundle
 const esmBundle = {
   input: 'src/index.ts',
   output: {
-    file: 'dist/index.js',
+    file: 'dist/index.mjs',
     format: 'esm',
     sourcemap: true,
     exports: 'named',
@@ -40,4 +53,4 @@ const dtsBundle = {
   external,
 };
 
-export default [esmBundle, dtsBundle];
+export default [cjsBundle, esmBundle, dtsBundle];
