@@ -104,7 +104,7 @@ const onChange = async (data: { design: unknown; type: string }) => {
 | `language`          | `Language`                               | `undefined`  | Template language                 |
 | `appearance`        | `AppearanceConfig`                       | `undefined`  | Visual customization              |
 | `tools`             | `ToolsConfig`                            | `undefined`  | Tool enable/disable               |
-| `customTools`       | `DragbleToolConfig[]`                   | `undefined`  | Custom tools                      |
+| `customTools`       | `DragbleToolConfig[]`                    | `undefined`  | Custom tools                      |
 | `features`          | `FeaturesConfig`                         | `undefined`  | Feature toggles                   |
 | `fonts`             | `FontsConfig`                            | `undefined`  | Fonts configuration               |
 | `bodyValues`        | `Record<string, unknown>`                | `undefined`  | Body values                       |
@@ -120,11 +120,11 @@ const onChange = async (data: { design: unknown; type: string }) => {
 | `height`            | `String \| Number`                       | `"600px"`    | Editor height                     |
 | `minHeight`         | `String \| Number`                       | `"600px"`    | Minimum height                    |
 | `options`           | `EditorOptions`                          | `undefined`  | Additional options                |
-| `callbacks`         | `Omit<DragbleCallbacks, ...>`           | `undefined`  | SDK callbacks                     |
+| `callbacks`         | `Omit<DragbleCallbacks, ...>`            | `undefined`  | SDK callbacks                     |
 
-| `collaboration`     | `boolean \| CollaborationFeaturesConfig` | `undefined`  | Collaboration features            |
-| `user`              | `UserInfo`                               | `undefined`  | User info                         |
-| `designMode`        | `"edit" \| "live"`                       | `undefined`  | Template permissions              |
+| `collaboration` | `boolean \| CollaborationFeaturesConfig` | `undefined` | Collaboration features |
+| `user` | `UserInfo` | `undefined` | User info |
+| `designMode` | `"edit" \| "live"` | `undefined` | Template permissions |
 
 ## Events
 
@@ -182,7 +182,7 @@ All SDK methods are accessible via a template ref. Key methods:
 
 For more control over the editor lifecycle, use the `useDragbleEditor` composable:
 
-```vue
+```vue 3
 <script setup lang="ts">
 import { useDragbleEditor } from "dragble-vue-editor";
 
@@ -207,11 +207,11 @@ const exportHtml = async () => {
 
 **Returns:**
 
-| Property      | Type                       | Description                          |
-| ------------- | -------------------------- | ------------------------------------ |
+| Property      | Type                      | Description                          |
+| ------------- | ------------------------- | ------------------------------------ |
 | `editor`      | `Ref<DragbleSDK \| null>` | SDK instance (null until ready)      |
-| `isReady`     | `Ref<boolean>`             | Whether the editor is initialized    |
-| `containerId` | `string`                   | DOM element ID to bind the editor to |
+| `isReady`     | `Ref<boolean>`            | Whether the editor is initialized    |
+| `containerId` | `string`                  | DOM element ID to bind the editor to |
 
 ## TypeScript
 
@@ -232,4 +232,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to contribute to 
 ## License
 
 [MIT](./LICENSE)
-
