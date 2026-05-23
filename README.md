@@ -315,7 +315,7 @@ The `id` you pass to `connectMCP()` is a **Bring Your Own ID (BYOI)** that maps 
 
 **Why these rules?**
 
-- The `id` is used in database lookups, URL paths, and storage keys — special characters or extreme lengths would break routing
+- The `id` is used in database lookups and URL paths — special characters or extreme lengths would break routing
 - Same `id` = resume the same session. Random UUIDs mean every page refresh creates a new session and loses AI context
 - Short IDs (< 8 chars) are too easy to guess, long IDs (> 128 chars) waste storage
 
@@ -331,28 +331,9 @@ editor.connectMCP({ id: "tenant_42_invoice_template_v3" }); // tenant + entity
 editor.connectMCP({ id: crypto.randomUUID() });
 ```
 
-### Storage modes (compliance)
-
-Choose how much of the session lives on Dragble's servers:
-
-| Mode             | Persistence               | Use case                                                |
-| ---------------- | ------------------------- | ------------------------------------------------------- |
-| `full` (default) | Metadata + design content | Standard SaaS; survives refresh, restart, device switch |
-| `metadata-only`  | Metadata only             | Audit logs without storing customer content             |
-| `memory-only`    | None — RAM only           | HIPAA / SOC2 / strict data residency                    |
-
-```ts
-editor.connectMCP({
-  id: "user-42-doc-99",
-  storage: "full", // default — best UX, refresh + cross-device resume
-  // "metadata-only"        // audit metadata only, no design content persisted
-  // "memory-only"          // nothing persisted (HIPAA / SOC2 / data residency)
-});
-```
-
 ### Disconnecting
 
-`disconnectMCP()` permanently destroys the session — the database record is deleted and the session cannot be reopened:
+`disconnectMCP()` permanently destroys the session — the session cannot be reopened:
 
 ```ts
 const { destroyed } = await editor.disconnectMCP();
@@ -371,7 +352,7 @@ Idle sessions are reaped after 2 hours of inactivity. Active sessions never expi
 
 | Method                                             | Returns                                                                 |
 | -------------------------------------------------- | ----------------------------------------------------------------------- |
-| `editor.connectMCP({ id, storage?, editorMode? })` | `{ sessionId, storageMode?, resumed? }`                                 |
+| `editor.connectMCP({ id, editorMode? })`           | `{ sessionId, resumed? }`                                               |
 | `editor.disconnectMCP()`                           | `{ destroyed }` — permanently deletes session                           |
 | `editor.getPairingCode()`                          | `{ code, expiresAt }` — generate a pairing code for end-user AI clients |
 | `editor.endPairing()`                              | `{ revoked }` — invalidate the active pairing code                      |
