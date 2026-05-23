@@ -261,11 +261,10 @@ const handleConnectAI = async () => {
   //   const id = "alice123-campaign-summer-2026";
   //
   // Format rules: 8-128 chars, only letters/digits/hyphens/underscores.
-  const userIdFromAuth = "alice123";        // from your auth/session
+  const userIdFromAuth = "alice123"; // from your auth/session
   const docIdFromRoute = "campaign-summer"; // from your URL or DB row
   const id = `${userIdFromAuth}-${docIdFromRoute}`;
-  const { sessionId } =
-    await editorRef.value!.editor!.connectMCP({ id });
+  const { sessionId } = await editorRef.value!.editor!.connectMCP({ id });
   // Pass sessionId to your backend — it calls MCP tools with your mcp_key
 };
 </script>
@@ -309,21 +308,23 @@ This prevents two AI controllers from conflicting on the same design.
 The `id` you pass to `connectMCP()` is a **Bring Your Own ID (BYOI)** that maps to your domain entities. It is NOT a random token — it is how Dragble identifies the session across browser refreshes, server restarts, and device switches.
 
 **Rules:**
+
 - 8–128 characters long
 - Only letters, numbers, hyphens, and underscores (`a-z A-Z 0-9 - _`)
 - Must be deterministic — the same user editing the same document should always produce the same `id`
 
 **Why these rules?**
+
 - The `id` is used in database lookups, URL paths, and storage keys — special characters or extreme lengths would break routing
 - Same `id` = resume the same session. Random UUIDs mean every page refresh creates a new session and loses AI context
 - Short IDs (< 8 chars) are too easy to guess, long IDs (> 128 chars) waste storage
 
 ```ts
 // Recommended: derive from your domain — concrete examples
-editor.connectMCP({ id: "alice123-campaign-summer-2026" });   // user + doc
+editor.connectMCP({ id: "alice123-campaign-summer-2026" }); // user + doc
 editor.connectMCP({ id: "workspace_acme_template_welcome" }); // workspace + template
-editor.connectMCP({ id: "org-uber-eats-promo-q4-2026" });     // org + campaign
-editor.connectMCP({ id: "tenant_42_invoice_template_v3" });   // tenant + entity
+editor.connectMCP({ id: "org-uber-eats-promo-q4-2026" }); // org + campaign
+editor.connectMCP({ id: "tenant_42_invoice_template_v3" }); // tenant + entity
 
 // Valid but NOT recommended — random IDs break session continuity
 // (every page refresh creates a brand new session, AI loses context)
@@ -334,16 +335,16 @@ editor.connectMCP({ id: crypto.randomUUID() });
 
 Choose how much of the session lives on Dragble's servers:
 
-| Mode | Persistence | Use case |
-|---|---|---|
+| Mode             | Persistence               | Use case                                                |
+| ---------------- | ------------------------- | ------------------------------------------------------- |
 | `full` (default) | Metadata + design content | Standard SaaS; survives refresh, restart, device switch |
-| `metadata-only` | Metadata only | Audit logs without storing customer content |
-| `memory-only` | None — RAM only | HIPAA / SOC2 / strict data residency |
+| `metadata-only`  | Metadata only             | Audit logs without storing customer content             |
+| `memory-only`    | None — RAM only           | HIPAA / SOC2 / strict data residency                    |
 
 ```ts
 editor.connectMCP({
   id: "user-42-doc-99",
-  storage: "full",          // default — best UX, refresh + cross-device resume
+  storage: "full", // default — best UX, refresh + cross-device resume
   // "metadata-only"        // audit metadata only, no design content persisted
   // "memory-only"          // nothing persisted (HIPAA / SOC2 / data residency)
 });
@@ -360,7 +361,7 @@ const { destroyed } = await editor.disconnectMCP();
 Your backend can also force-destroy a session server-side (e.g., when a user's subscription ends):
 
 ```bash
-curl -X DELETE https://mcp.dragble.io/sessions/user-42-doc-99 \
+curl -X DELETE https://mcp.dragble.com/sessions/user-42-doc-99 \
   -H "X-API-Key: db_mcp_your_key_here"
 ```
 
@@ -368,14 +369,14 @@ Idle sessions are reaped after 2 hours of inactivity. Active sessions never expi
 
 ### MCP method reference
 
-| Method | Returns |
-|---|---|
-| `editor.connectMCP({ id, storage?, editorMode? })` | `{ sessionId, storageMode?, resumed? }` |
-| `editor.disconnectMCP()` | `{ destroyed }` — permanently deletes session |
-| `editor.getPairingCode()` | `{ code, expiresAt }` — generate a pairing code for end-user AI clients |
-| `editor.endPairing()` | `{ revoked }` — invalidate the active pairing code |
-| `editor.getMCPStatus()` | `{ paired: true, sessionId } \| { paired: false, reason? }` |
-| `editor.onAIToolFired(cb)` | unsubscribe fn — fires when AI calls any tool |
+| Method                                             | Returns                                                                 |
+| -------------------------------------------------- | ----------------------------------------------------------------------- |
+| `editor.connectMCP({ id, storage?, editorMode? })` | `{ sessionId, storageMode?, resumed? }`                                 |
+| `editor.disconnectMCP()`                           | `{ destroyed }` — permanently deletes session                           |
+| `editor.getPairingCode()`                          | `{ code, expiresAt }` — generate a pairing code for end-user AI clients |
+| `editor.endPairing()`                              | `{ revoked }` — invalidate the active pairing code                      |
+| `editor.getMCPStatus()`                            | `{ paired: true, sessionId } \| { paired: false, reason? }`             |
+| `editor.onAIToolFired(cb)`                         | unsubscribe fn — fires when AI calls any tool                           |
 
 ### Full documentation
 
@@ -650,9 +651,12 @@ editorRef.value!.destroy(); // void
 Component events (`@ready`, `@load`, `@change`, `@error`, `@comment`) cover the common Vue integration points. For lower-level SDK events, subscribe with `addEventListener` after the editor is ready:
 
 ```ts
-const unsubscribe = editorRef.value?.addEventListener("design:updated", (data) => {
-  console.log("Design changed:", data);
-});
+const unsubscribe = editorRef.value?.addEventListener(
+  "design:updated",
+  (data) => {
+    console.log("Design changed:", data);
+  },
+);
 
 // Or remove manually
 editorRef.value?.removeEventListener("design:updated", callback);
